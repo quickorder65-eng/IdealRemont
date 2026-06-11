@@ -1,17 +1,18 @@
 function doPost(e) {
   try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Leads');
-
     const data = JSON.parse(e.postData.contents);
 
-    const name          = data.name          || '';
-    const phone         = data.phone         || '';
-    const objectType    = data.objectType    || '';
-    const area          = data.area          || '';
-    const repairType    = data.repairType    || '';
-    const designProject = data.designProject || '';
-    const startTime     = data.startTime     || '';
-    const source        = data.source        || '';
+    const ss    = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName('Leads') || ss.getActiveSheet();
+
+    const name          = String(data.name          || '').trim();
+    const phone         = String(data.phone         || '').replace(/[^\d]/g, '').trim();
+    const objectType    = String(data.objectType    || '').trim();
+    const area          = String(data.area          || '').trim();
+    const repairType    = String(data.repairType    || '').trim();
+    const designProject = String(data.designProject || '').trim();
+    const startTime     = String(data.startTime     || '').trim();
+    const source        = String(data.source        || 'quiz').trim();
 
     if (!phone) {
       return ContentService
@@ -19,17 +20,12 @@ function doPost(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
-    sheet.appendRow([
-      new Date(),
-      name,
-      phone,
-      objectType,
-      area,
-      repairType,
-      designProject,
-      startTime,
-      source
-    ]);
+    const row     = [new Date(), name, phone, objectType, area, repairType, designProject, startTime, source];
+    const nextRow = sheet.getLastRow() + 1;
+
+    sheet.getRange('C:C').setNumberFormat('@');
+    sheet.getRange(nextRow, 3).setNumberFormat('@');
+    sheet.getRange(nextRow, 1, 1, 9).setValues([row]);
 
     return ContentService
       .createTextOutput(JSON.stringify({ success: true }))

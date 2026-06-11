@@ -157,7 +157,7 @@ function sendToCRM(name, phone) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       name,
-      phone,
+      phone:         String(phone).replace(/[^\d]/g, ''),
       objectType:    answers[1] || '',
       area:          answers[2] || '',
       repairType:    answers[3] || '',

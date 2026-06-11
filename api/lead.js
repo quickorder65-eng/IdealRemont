@@ -9,8 +9,8 @@ module.exports = async function handler(req, res) {
   const b = req.body || {};
 
   const payload = {
-    name:          b.name          || '',
-    phone:         b.phone         || '',
+    name:          String(b.name          || '').trim(),
+    phone:         String(b.phone         || '').replace(/[^\d]/g, ''),
     objectType:    b.objectType    || '',
     area:          b.area          || '',
     repairType:    b.repairType    || '',
