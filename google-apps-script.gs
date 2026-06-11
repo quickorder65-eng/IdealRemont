@@ -1,39 +1,31 @@
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Leads');
+    if (!sheet) sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
-    const ss    = SpreadsheetApp.getActiveSpreadsheet();
-    const sheet = ss.getSheetByName('Leads') || ss.getActiveSheet();
+    var name          = String(e.parameter.name          || '').trim();
+    var phone         = String(e.parameter.phone         || '').replace(/[^\d]/g, '').trim();
+    var objectType    = String(e.parameter.objectType    || '').trim();
+    var area          = String(e.parameter.area          || '').trim();
+    var repairType    = String(e.parameter.repairType    || '').trim();
+    var designProject = String(e.parameter.designProject || '').trim();
+    var startTime     = String(e.parameter.startTime     || '').trim();
+    var source        = String(e.parameter.source        || 'quiz').trim();
 
-    const name          = String(data.name          || '').trim();
-    const phone         = String(data.phone         || '').replace(/[^\d]/g, '').trim();
-    const objectType    = String(data.objectType    || '').trim();
-    const area          = String(data.area          || '').trim();
-    const repairType    = String(data.repairType    || '').trim();
-    const designProject = String(data.designProject || '').trim();
-    const startTime     = String(data.startTime     || '').trim();
-    const source        = String(data.source        || 'quiz').trim();
+    if (!phone) return ContentService.createTextOutput('error: phone is required');
 
-    if (!phone) {
-      return ContentService
-        .createTextOutput(JSON.stringify({ success: false, error: 'Phone is required' }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-
-    const row     = [new Date(), name, phone, objectType, area, repairType, designProject, startTime, source];
-    const nextRow = sheet.getLastRow() + 1;
-
+    var nextRow = sheet.getLastRow() + 1;
     sheet.getRange('C:C').setNumberFormat('@');
-    sheet.getRange(nextRow, 3).setNumberFormat('@');
-    sheet.getRange(nextRow, 1, 1, 9).setValues([row]);
+    sheet.getRange(nextRow, 1, 1, 9).setValues([[
+      new Date(), name, phone, objectType, area, repairType, designProject, startTime, source
+    ]]);
 
-    return ContentService
-      .createTextOutput(JSON.stringify({ success: true }))
-      .setMimeType(ContentService.MimeType.JSON);
-
-  } catch (error) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ success: false, error: error.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput('ok');
+  } catch (err) {
+    return ContentService.createTextOutput('error: ' + err);
   }
+}
+
+function doGet() {
+  return ContentService.createTextOutput('CRM script is working');
 }

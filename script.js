@@ -147,25 +147,26 @@ quizBack.addEventListener('click', () => {
   if (currentStep > 1) goToStep(currentStep - 1);
 });
 
+const GOOGLE_SCRIPT_URL = '';
+
 let _crmSent = false;
 
 function sendToCRM(name, phone) {
   if (_crmSent) return;
+  if (!GOOGLE_SCRIPT_URL) return;
   _crmSent = true;
-  fetch('/api/lead', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      name,
-      phone:         String(phone).replace(/[^\d]/g, ''),
-      objectType:    answers[1] || '',
-      area:          answers[2] || '',
-      repairType:    answers[3] || '',
-      designProject: answers[4] || '',
-      startTime:     answers[5] || '',
-      source:        'quiz'
-    })
-  }).catch(() => {});
+
+  const formData = new FormData();
+  formData.append('name',          name || '');
+  formData.append('phone',         String(phone || '').replace(/[^\d]/g, ''));
+  formData.append('objectType',    answers[1] || '');
+  formData.append('area',          answers[2] || '');
+  formData.append('repairType',    answers[3] || '');
+  formData.append('designProject', answers[4] || '');
+  formData.append('startTime',     answers[5] || '');
+  formData.append('source',        'quiz');
+
+  fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData }).catch(() => {});
 }
 
 /* ============================================================
