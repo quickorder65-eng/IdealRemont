@@ -1,3 +1,5 @@
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwjHIKLgick8gwYOdzBoF-Y1FQfd-hmSSN-SegXBlf28Qnec5Zt7xuF5eAzTgRy-1pC/exec';
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -5,16 +7,14 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    const r = await fetch(process.env.APPS_SCRIPT_URL, {
+    await fetch(SHEET_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(req.body)
     });
-    const text = await r.text();
-    console.log('Apps Script:', text);
-    return res.status(200).json({ status: 'ok' });
-  } catch (err) {
-    console.error('CRM error:', err.message);
-    return res.status(500).json({ status: 'error', message: err.message });
+  } catch (e) {
+    console.error(e.message);
   }
+
+  return res.status(200).json({ status: 'ok' });
 };
