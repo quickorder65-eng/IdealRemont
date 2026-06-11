@@ -147,19 +147,23 @@ quizBack.addEventListener('click', () => {
   if (currentStep > 1) goToStep(currentStep - 1);
 });
 
+let _crmSent = false;
+
 function sendToCRM(name, phone) {
+  if (_crmSent) return;
+  _crmSent = true;
   fetch('/api/lead', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       name,
       phone,
-      object: answers[1] || '',
-      area:   answers[2] || '',
-      type:   answers[3] || '',
-      design: answers[4] || '',
-      timing: answers[5] || '',
-      source: 'Квиз · Сайт'
+      objectType:    answers[1] || '',
+      area:          answers[2] || '',
+      repairType:    answers[3] || '',
+      designProject: answers[4] || '',
+      startTime:     answers[5] || '',
+      source:        'quiz'
     })
   }).catch(() => {});
 }
