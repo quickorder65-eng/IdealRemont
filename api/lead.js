@@ -1,4 +1,4 @@
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwvHonkiTW4q0CIQq-4TvNfHhMz6LpKdWymCUykqBfPLfpp8-eYh8BzZtH2y645HldU/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxGultjxrdXM5QHmuM_9qSIev9Tm4EtK47bBRL9a4gpb7DGYKSHzMo4TB389dgSt2Ee/exec';
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
