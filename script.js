@@ -147,7 +147,7 @@ quizBack.addEventListener('click', () => {
   if (currentStep > 1) goToStep(currentStep - 1);
 });
 
-const GOOGLE_SCRIPT_URL = '';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxM_eK6sThmhNeIjAzRgfnCmWZnEJUEO7k55WeJKeDsbM6pXoO9p4qqRD7tBL92Wfvy/exec';
 
 let _crmSent = false;
 
